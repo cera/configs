@@ -1,2 +1,2 @@
 # configs
-My configuration files
+Chris Cera's configuration files (chris@cera.us)
