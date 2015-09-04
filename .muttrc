@@ -1,0 +1,322 @@
+###############################################################################
+# .muttrc  
+# Chris Cera
+###############################################################################
+# Copied much from Sven Guckes in 2000, and moved all set declarations to the
+# front, but only for the VARIABLES section.  The COMMANDS section is still at
+# the bottom, and some of my additions will be down there.  They are not as
+# important as the VARIABLES though.
+###############################################################################
+#esc-k is the problem with the key selection ---- FIX THIS
+###############################################################################
+# RECENT THINGS 5/11/2014
+
+set mbox_type = Maildir
+set sendmail = /usr/local/bin//msmtp
+source ~/.muttrc_hidden
+my_hdr From: Chris Cera <cera@arcweb.co>
+my_hdr Reply-To: Chris Cera <cera@arcweb.co>
+my_hdr Bcc: Chris Cera <cera@arcweb.co>
+set signature = "~/.signature_arcweb.txt"
+
+set alias_file=~/.muttrc_aliases
+source ~/.muttrc_colors
+
+# killer, limit messages to flagged, unread, and old
+macro index x <limit>" ~F | ~O | ~N "\n
+set fcc_clear=yes
+set editor="vim -c ':0;/^To: '"
+set envelope_from                     # spoof mail from address
+set pager_format="%C %n (%l) %s"      # Sven's favourite
+
+set index_format="%3C %Z %[!%m%d %H:%M] [%1M] %-15.15F (%c) %s"
+
+set folder_format="%2C %t %N %8s %f"
+
+# this will get rid of the inserted '+' on long lines.
+set markers=no
+
+set wrapmargin=4
+
+# sidebar
+set sidebar_width=25
+set sidebar_visible=yes
+macro index B ':toggle sidebar_visible^M'
+macro pager B ':toggle sidebar_visible^M'
+
+mailboxes +Arcweb/INBOX +Cera/INBOX
+color sidebar_new blue brightwhite
+
+# ctrl-n, ctrl-p to select next, prev folder, ctrl-o to open selected folder
+bind index \CP sidebar-prev
+bind index \CN sidebar-next
+bind index \CO sidebar-open # this isn't working 6/2014
+bind pager \CP sidebar-prev
+bind pager \CN sidebar-next
+bind pager \CO sidebar-open # this isn't working 6/2014
+
+###############################################################################
+# ANYWHERE ATTRIBUTES
+###############################################################################
+
+# 11/6/2003 -- uses subject instead, hopefully Message-ID too
+unset strict_threads    # thread only by In-Reply-To/References or by Subject.
+
+set allow_8bit # send data as it is.  no conversion.
+set ascii_chars  # set: use ASCII characters to build the thread tree
+set attribution="* %n <%a> [%(%y%m%d %H:%M)]:"
+set autoedit  # call editor without prompting for To: and Subject:
+set beep_new=yes
+set confirmcreate  # set: prompt for confirmation on creation of folders
+set copy           # Always keep a copy of my mails!
+set delete=ask-yes
+set edit_headers     # edit all headers lines in the editor
+#set force_name       # set: save outbound mail by username
+
+set forw_format="Fw: %s"
+
+set history=100 # 0.51: number of input lines for prompts to remember
+
+## cc: 8/12/2003 set ignore_list_reply_to  # ignore the "Reply-To" lines
+set include      # set: include mail as quoted text in replies
+set mime_forward=ask-yes        # mutt-0.92:  now a quadoption!
+set noconfirmappend  # set: prompt for confirmation on appending mail to folder
+
+set nomove  # do not move read mails from mailbox to $mbox (was: "set hold")
+set noprompt_after  # set: gives you a prompt when pager exits
+
+set pager_format="%S [%C/%T] %n (%l) %s"      # Sven's favourite
+#
+# this is for the split screen, use =0 for no split screen
+set pager_index_lines=5   # number of lines to see from the index
+set pager_stop            # next-undeleted when the end of the mail is shown
+
+set quote_regexp="^> "         # nothing but the real thing!
+set read_inc=1     #  '1': show count number with *every* mail.
+set recall=no      # do not prompt for recalling postponed mails with 'm'
+set reply_regexp="^((aw|antw.?|antwort|re|r e|r?f|sv):[ \t]*)*"
+## cc: 8/12/2003 set reply_to=ask-yes   # "reply":          set:  Use address in Reply-To?
+set reverse_alias  # show the name of sender as set with my alias for him
+## cc: 8/12/2003 set reverse_name   # reply as the user to whom the mail was sent to
+set save_address
+set save_name      # set: save outbound mail to =username if it exists
+set shell=bash     # use the zsh for shell commands
+set sort=threads # sorting method - I definitely like "threads" best
+
+
+# 2014
+set status_format="MUTT   %h:%f (%s) %> [N=%n,F=%F,O=%o,post=%p]"
+# set status_format="%v: %f (%s) [%M/%m] [N=%n,*=%t,post=%p,new=%b]"
+# set status_format="MUTT   %h:%f (%s) %> [N=%n,O=%o,post=%p]"
+
+set status_on_top # set: present the status bar at top, ie before the index
+set tilde  # show non-existant lines of text with a tilde at begin-of-line
+set to_chars="X+TCF"
+set write_inc=1 #  update number after each       read mail
+set write_inc=10#  update number after each tenth read mail
+
+unset arrow_cursor #  Show current mail with an inverse bar.
+unset followup_to # do not generate a Followup-To header
+
+## FAQ: Startup mutt with collapsed threads:
+folder-hook . exec collapse-all
+
+###############################################################################
+# for urlview
+# macro index \cb |urlview\n
+# macro pager \cb |urlview\n
+
+#macro index \cd "<enter-command>unset wait_key\n<pipe-entry>bogofilter -n\n<enter-command>set wait_key\n<delete-message>"
+#macro index S "<enter-command>unset wait_key\ns=spam_manual\n<pipe-entry>bogofilter -s\n<enter-command>set wait_key\n" #just removed the delete recently
+
+# NOTE THE PAGER COMMANDS GO TO THE NEXT UNREAD
+
+# macro index S "<enter-command>unset wait_key\ns=spam/spam_manual\n<enter-command>set wait_key\n" #just removed the delete recently
+# macro pager S "<enter-command>unset wait_key\ns=spam/spam_manual\n<enter-command>set wait_key\n<enter-command>next-unread\n" #just removed the delete recently
+
+# move despammed mails
+# macro index D "<enter-command>unset wait_key\ns=spam/spam_despam\n<enter-command>set wait_key\n" #just removed the delete recently
+# macro pager D "<enter-command>unset wait_key\ns=spam/spam_despam\n<enter-command>set wait_key\n<enter-command>next-unread\n" #just removed the delete recently
+
+# macro index A "<enter-command>unset wait_key\ns=spam/spam_spamassassin\n<enter-command>set wait_key\n" #just removed the delete recently
+# macro pager A "<enter-command>unset wait_key\ns=spam/spam_spamassassin\n<enter-command>set wait_key\n<enter-command>next-unread\n" #just removed the delete recently
+
+# these cost me a usenet post.  Minus 10 hacker points, but its worth it.
+# macro attach H '| ssh -C 192.168.0.5 "cat > ~/' "Copy via SSH"
+
+# in response to sorting in reverse order post, with same threading by post
+#set sort_aux=reverse-date-sent
+
+###############################################################################
+# FILES to source in
+###############################################################################
+
+# source ~/.muttrc_addrses
+# source ~/.muttrc_aliases
+# source ~/.muttrc_lists
+# source ~/.muttrc_custom
+
+#source ~/.muttrc_mono
+#source ~/.muttrc_bind
+#source ~/.muttrc_color
+#source ~/.muttrc_score
+#source ~/.muttrc_gpg
+#source ~/.muttrc_rainbow
+
+#for the goofy days
+#source ~/.muttrc_rainbow
+
+#sven's color file, too jazzy for me
+#source ~/.muttrc_sven_color
+
+# spoof date here?
+#my_hdr Date: 
+
+###############################################################################
+# LOCAL ATTRIBUTES
+###############################################################################
+
+# FILES AND DIRECTORIES
+
+# set folder=~/Mail    # directory with all mail folders
+# set tmpdir="~/mail/tmp" # directory where temporary files are to be placed
+# saves all outgoing mail into mbox too
+# fcc-save-hook ~A ~/mail/mbox
+
+# COMMANDS -- THESE ARE NOT EXACTLY FOR BOTH HOME/WORK!!!!!!!!!!!!!!!!!!
+
+# added on 4/21/2001
+# doesn't appear to fix the local mail problem
+#set sendmail="/var/qmail/bin/qmail-inject"
+# but this does
+
+
+# insomnio settings
+#set sendmail="/usr/sbin/sendmail"
+#set hostname="pool-151-197-17-119.phil.east.verizon.net"
+
+# set print_command="a2ps --rows=1 --columns=1 --portrait --output=- > ~/mail.$$.txt"
+
+#set pop_host="mail.drexel.edu"
+#set pop_user="st96k9ry"
+
+
+###############################################################################
+# FORMAT STRINGS
+###############################################################################
+
+
+## index_format:  (NOTE: hdr_format was renamed to index_format!!)
+## Examples:
+##  set index_format="%4C %Z %{%b %d} %-15.15L (%4l) %s"  #default!
+##  set index_format="%4C %Z %M %2N %-15.15F (%6c) %s"
+##  set index_format="%4C %Z %2m%2N %-17.17n (%4c) %s"
+##  set index_format="%4C %Z %2m%2N %-17.17n (%4l) %s"
+# this adds "%4N" to display the 'Number' value (aka "score") of messages:
+# set index_format="%4C %4N %Z %[!%y%m%d] %-17.17F (%3l) %s"
+##
+##
+#set index_format="%4C %Z %[!%y%m%d] %-17.17F (%3l) %s"  # Sven's favourite
+	#  Explanation:
+	#    %4C         four characters for the "Count" (index number)
+	#    %Z          message status flags
+	#    %[]         the date and time of the message is converted to the
+	#                local time zone, and ``fmt'' is expanded by the library
+	#                function ``strftime''; a leading bang disables locales
+	#                %[!%y%m%d]  therefore means to display the date in
+	#                yymmdd format (year, month, day) for the local time zone.
+	#    %-17.17F    17 characters for the "From:" (ie sender's name/address)
+	#    (%3l)        3 characters for the length in Lines: displayed in brackets
+	#    %s          the "Subject:" line (at last!)
+
+## TO show the number of messages in a collapsed thread
+## you need to add "%M" to the "index_format", eg:
+#set index_format="%4C %Z %2M %[!%y%m%d] %-17.17F (%3l) %s"
+
+# DEFAULT IS:::
+#set index_format="%4C %Z %{%b %d} %-15.15L (%4l) %s"
+#219   + [ ] Apr 21 Chris Cera           (   0) test to chris
+
+#set index_format="%3C %Z [%1M] %{%b %d} %-20.20L (%4l) %s"
+#set index_format="%3C %Z %[!%m%d %H:%M] [%1M] %-15.15L %-13.15t (%2l) %s"
+#set index_format="%3C %Z %[!%m%d %H:%M] [%1M] %-15.15v (%2l) %s"
+# set index_format="%3C %Z %[!%m%d %H:%M] [%1M] %-15.15F (%2l) %s"
+
+## pager_format - format of summary on current mail in the pager
+## (until 0.52: pager_fmt)
+## Examples:
+##  set pager_format="%S %C/%T: %-20.20n   %s"  # default
+##  set pager_format="%S %C/%T?%n: %-20.20n %s"
+# - [221/X] MAILER-DAEMON@cera.ws (22) failure notice                    -- (95%) 
+#set pager_format="%S [%C/%T] %n (%l) %s"      # Sven's favourite
+
+## folder_format
+
+## Type: string
+## Default: "%2C %t %N %F %2l %-8.8u %-8.8g %8s %d %f" 
+## 
+## This variable allows you to customize the file browser display to your personal taste. This string is similar to ``index_format'', but has its own set of printf()-like
+## sequences: 
+## 
+##    %C      current file number
+##    %d      date/time folder was last modified
+##    %f      filename
+##    %F      file permissions
+##    %g      group name (or numeric gid, if missing)
+##    %l      number of hard links
+##    %N      N if folder has new mail, blank otherwise
+##    %s      size in bytes
+##    %t      * if the file is tagged, blank otherwise
+##    %u      owner name (or numeric uid, if missing)
+##    %>X     right justify the rest of the string and pad 
+##            with character "X"
+##    %|X     pad to the end of the line with character "X"
+
+# this is supposedly the default
+#  1   N -rw-r--r--  1 chris    chris      130643 Apr 22 02:44 =comments     
+#set folder_format "%2C %t %N %F %2l %-8.8u %-8.8g %8s %d %f"
+
+# cc: 8/13/2003
+# ignore *
+# unignore date to cc from subject
+# unignore organization organisation x-mailer: x-newsreader: x-mailing-list: user-agent
+# unignore posted-to:
+
+# ignore from Message-Id sender subject reply-to
+
+# 5/19/2004 lbdx retrieval
+# set query_command = "lbdbq '%s'"
+
+# ############################################################################
+# # 8/2/2005 -- side-bar patch originally started
+# ###############################################################################
+
+# format=flowed testing -- 10/29/2006
+
+# 3/25/2007: commenting this.  This applies to outbound messages only, it only
+# inserts the mime-type, it does not actually add the trailing space to the
+# line as the RFC indicates ... this is up to the editor.  I consider this
+# half-ass, so I'm not using it.
+# set text_flowed
+
+# cera multiple addresses support on 9/18/2007
+# send-hook ".*.drakontas.com" "my_hdr From: Chris Cera <cera@drakontas.com>"
+# send-hook ".*.drakontas.com" "my_hdr Reply-To: Chris Cera <cera@drakontas.com>"
+# send-hook ".*.drakontas.com" "set signature="~/.signature_drakontas"
+
+# send-hook ".*.hovitate.com" "my_hdr From: Chris Cera <cera@hovitate.com>"
+# send-hook ".*.hovitate.com" "my_hdr Reply-To: Chris Cera <cera@hovitate.com>"
+# send-hook ".*.hovitate.com" "set signature="~/.signature_hovitate"
+
+# set from=chris@cera.us
+# set realname="Chris Cera"
+
+# set reverse_name=yes
+# alternates "cera@hovitate.com|cera@drakontas.com"
+
+# set smtp_url="smtp://chris@cera.us:6cbum429@smtpauth.exchangecarrier.net:587/"
+# set sendmail="/usr/bin/msmtp"
+
+# 11/16/2014: Next 2 lines -- http://jasonwryan.com/blog/2012/05/12/mutt/
+auto_view text/html
+alternative_order text/plain text/enriched text/html

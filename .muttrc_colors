@@ -1,0 +1,190 @@
+## =============================================================
+## Color definitions - See the manual.txt at
+## "The Pager" and "Using color and mono video attributes"
+## =============================================================
+
+
+## From the manual to mutt-0.96.3:
+## Objects that you can colorize:
+##      attachment, body, bold, error, header, hdrdefault,
+##      index, indicator, markers, message, normal,
+##      quoted, quoted1, ..., quotedN,
+##      search, signature, status, tilde, tree, underline.
+## Color names you can use for "background" and "foreground":
+##      black white magenta green blue cyan red red default colorx
+## NOTE:  Although I'd like to use "default" as the background color,
+##        it somehow does not work out with "xterm".
+##        So I changed it to "white" everywhere.
+
+   color normal      black  white  # pager body
+
+   color attachment  magenta  white  # ..
+#  color body        magenta  white  # ..
+
+#PWEE ADDED FIRST BY PWEE, should r/m this is dirty
+#   color header      blue   white    "^x-mailer: "
+
+# SPECIAL COLORINGS FIRST!
+# special color for replies to posts on Usenet:
+   color header      red      black    "^to: guckes-usenet"
+   color header      red   white    "^user-agent: "
+# special color for good user agents - mutt and xemacs:
+   color header      green     white    "^user-agent: .*mutt"
+   color header      green     white    "^X-Mailer: .*xemacs"
+# pine and tin:
+   color header      red      white    "^user-agent: .*pine"
+   color header      red      white    "^user-agent: .*tin"
+   color header      green     white    "^x-editor: .*vim"
+# Old Pine versions only identify by the message id:
+   color header      black    red      "^message-id: .*pine"
+# special color for "Mozilla" mailer (aka Netscape)
+   color header      magenta  white    "^x-newsreader: "
+   color header      black    red      "^x-newsreader: .*trn"
+# tin puts its info on CCs into an extra line:
+   color header      black    red      "^x-also-posted-to: "
+   color header      black    red      "^x-webtv-signature: "
+# Lotus-Schmotus:
+  color header       red    black      "^x-lotus-fromdomain: "
+  color header       red    black      "^X-Mailer: Lotus Notes"
+# M$ sucks:
+# X-Mailer: Microsoft Outlook IMO, Build 9.0.2416 (9.0.2910.0)
+  color header       brightred    black   "^X-Mailer: Internet Mail Service"
+  color header       brightred    black    "^X-Mailer: .*Microsoft Outlook"
+# AK-Mail users do not seem to be able to type, either:
+  color header       brightred    black      "^X-Mailer: .*AK-Mail"
+# AOL - "me, too!" - NOT!
+# X-Mailer: AOL 4.0 for Windows 95 sub 38
+  color header       brightred    black      "^X-Mailer: .*AOL"
+#
+# Mails delivered to guckes@host.math.fu-berlin.de # are almost always spam:
+  color header       black    red      "^Delivered-To: .*@.*\.math.fu-berlin.de"
+#  match ftp addresses:
+#  color "default" is not known any more?
+#  color body cyan default "ftp://[^ ]*"
+   color body cyan white   "ftp://[^ ]*"
+#  match http addresses:
+#  color "default" is not known any more?
+   color body        magenta   white   "[[:alnum:]][-+.#_[:alnum:]]*@[-+.[:alnum:]]*[[:alnum:]]"
+#
+#  Colorize "Internet addresses":
+   color body        red    white   "(http|ftp|news|telnet|finger)://[^ >]*"
+   color body        red    white   "<URL:[^ ]*>"
+   color error       brightred     white    # global
+#
+# NEW color scheme for header:
+   color header      blue      white    "^subject: "
+   color header      blue      white    "^from: "
+   color header      red       white     "^date: "
+   color header      red       white       "^cc: "
+   color header      red       white    "^reply-to: "
+   color header      blue      white    "^from "
+   color header      blue      white    "^to: "
+
+#  color header      red    white    "^importance: "
+#  color header      green     white    "^importance: normal"
+   color header      magenta   white    "^message-id:"
+   color header      green     white    "^organi[sz]ation: "
+   color header      red    white    "^priority: "
+   color header      red       black    "^priority: urgent"
+   color header      green     white    "^priority: normal"
+
+   color header      magenta      white    "^delivered-to: "
+   color header      magenta      white    "^sender: "
+   color header      magenta      white    "^importance: "
+   color header      blue         white    "^organization: "
+   color header      blue         white    "^organisation: "
+
+# NEWS HEADERS
+   color header      blue    default      "^followup-to: "
+   color header      blue    default    "^posted-to: "
+   color header      blue    default      "^mail-followup-to: "
+   color header      blue    default      "^newsgroups: "
+
+# X-MAILER HEADERS
+#   color header      blue   white    "^x-mailer: "
+   color header      blue   white      "^x-mailer: mozilla"
+
+
+#
+#  color hdrdefault  blue   white  #
+# PWEE THIS IS THE SCROLLING LINE THAT YOU CONTROL FOR MESSAGES
+   color indicator   black cyan   # index
+   color markers     red    white  # index
+# PWEE THIS IS THE LAST LINE AT THE VERY BOTTOM WHEN YOU START MUTT
+   color message     black cyan   # index
+
+## ==================================================
+## Colorizing the body of messages (ie in the pager)
+## ==================================================
+
+#  Coloring quoted text - coloring only the first four levels:
+#  color quoted      cyan   white  # pager body
+   color quoted      magenta   white  # pager body
+   color quoted1     red    white  # pager body
+   color quoted2     magenta   white  # pager body
+   color quoted3     red white  # pager body
+#
+   color signature   red    white  # pager body
+# PWEE THIS IS THE BAND ACROSS THE TOP, foreground does bottom too?
+   color status      black cyan   # index status bar default: white black
+   color tilde       green   white  # pager body
+   color tree        red    white  # index
+
+   color bold        magenta  white   # ..
+   color underline   red white   #
+#  How this works:  Mutt recognizes sequences with embedded CTRL-H ('^H').
+#  If this matches one of the following kinds
+#  then you get to see the text as either "bold text" or "underlined text"
+#  depending on the capabilities of your terminal.
+#  bold:       "cc" -> "bold 'c'"
+#  underline:  "c_" -> "underlined 'c'"
+#  On color terminals you will see them with their own color.
+
+   color body        green   red     "<[Gg]>"
+   color body        green   red     "<[Bb][Gg]>"
+#  Colorize smileys:  :-)  ;-)  :-/  :-(
+
+   color body        red white   "[;:]-[)/(|]"
+
+
+# 12/18/2008 - WARNING -- BRIGHT MAKES A REAL CONSOLE
+
+
+#color body brightwhite brightwhite
+#color indicator brightwhite brightwhite
+
+## color status brightwhite brightwhite
+
+#color body brightwhite brightwhite .
+
+color normal black white
+
+color header blue white "To"
+color header red white "Date"
+color header green white ".*rgani"
+color header magenta white ".*ailer"
+color header magenta white ".*gent"
+color hdrdefault magenta white
+color attachment red white
+color signature red white
+
+#color index brightcyan        brightwhite   "~h 'From: Chris Cera'"
+
+#color index green brightwhite  '~f cera ~p'                # want to make emails from me, and to me a different color.
+color index magenta        white   "~h 'From: Chris Cera'"
+color index blue        white   "~s drakontas"
+color index yellow        white   "~s despammed"
+color index yellow        white   "~s spamassassin"
+color index black yellow  '~f cera ~p'     # only highlites nate, and others @cera.ws ... works for sven guckes though
+
+
+# color bold green brightwhite
+# color error default brightwhite
+# color markers default brightwhite
+# color message green brightwhite
+# color quoted default brightwhite
+# color quoted1 default brightwhite
+# color search default brightwhite
+# color tilde default brightwhite
+# color tree default brightwhite
+# color underline green brightwhite
